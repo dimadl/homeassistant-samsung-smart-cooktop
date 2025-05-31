@@ -1,0 +1,17 @@
+{
+  "domain": "cooktop",
+  "name": "samsung_cooktop",
+  "codeowners": [
+    "@github.com:dimadl/haas-samsung-cooktop-integration.git"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/cooktop",
+  "homekit": {},
+  "integration_type": "helper",
+  "iot_class": "local_polling",
+  "quality_scale": "bronze",
+  "requirements": ["requests"],
+  "ssdp": [],
+  "zeroconf": []
+}
