@@ -1,3 +1,5 @@
+import logging
+
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.const import UnitOfEnergy
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
@@ -5,6 +7,8 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.restore_state import RestoreEntity
 
 from .const import DOMAIN, BURNERS
+
+_LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     coordinator = hass.data[DOMAIN]["coordinator"]
@@ -24,35 +28,34 @@ class CooktopEnergySensor(CoordinatorEntity, SensorEntity, RestoreEntity):
     async def async_added_to_hass(self):
         """Restore previous state."""
         await super().async_added_to_hass()
-        if (last_state := await self.async_get_last_sensor_data()) is not None:
+        if (last_state := await self.async_get_last_state()) is not None:
             try:
-                self._total = float(last_state.native_value)
+                self._total = float(last_state.state)
             except (ValueError, TypeError):
                 self._total = 0.0
 
     @property
     def native_value(self):
-        return round(self._total, 3)
+        burners_data = self.coordinator.data.get("burners", {})
 
-    async def async_update(self):
-        # Called by HA if should_poll is True — skip if using coordinator instead
-        pass
-
-    async def async_write_coordinator_update(self):
-      burners_data = self.coordinator.data.get("burners", {})
-
-      for burner_id, burner_info in burners_data.items():
+        _LOGGER.debug(f"Get the burner data: {burners_data}")
+        for burner_id, burner_info in burners_data.items():
           burner_level = burner_info.get("level", 0)
           if burner_level == 0:
               continue
 
+          _LOGGER.debug(f"Search for the power value for the level: {burner_level}")
           power_map = BURNERS.get(burner_id, {}).get("power_consumption_map", [])
           matching = next((entry for entry in power_map if entry["level"] == burner_level), None)
           if matching:
-            self._total += matching.get("power", 0.0) * 10 / 3600000
+            found_power = matching.get("power", 0.0)
+            self._total += found_power * 10 / 3600000
+            _LOGGER.debug(f"Found power of the level: {burner_level}, power: {found_power}")
 
-      self.async_write_ha_state()
 
-    # def update(self):
-    #     self._total += 0.05  # Simulate energy increase
-    #     self._attr_native_value = round(self._total, 3)
+        _LOGGER.debug(f"Setting new: {self._total}")
+        return round(self._total, 3)
+
+    async def async_update(self):
+        pass
+
