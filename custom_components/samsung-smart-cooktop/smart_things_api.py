@@ -3,14 +3,14 @@ import requests, logging
 _LOGGER = logging.getLogger(__name__)
 
 class CooktopAPI:
-    def __init__(self, base_url, token):
+    def __init__(self, base_url, oauth_session):
         self.base_url = base_url
-        self.token = token
+        self.oauth_session = oauth_session
 
     def get_cooktop_burners_status(self, device_id, burner_ids):
         _LOGGER.info(f"GET {self.base_url}/devices/{device_id}/status")
 
-        header = {'Authorization': 'Bearer {}'.format(self.token)}
+        header = {'Authorization': 'Bearer {}'.format(self.oauth_session.get_token())}
         response = requests.get(f"{self.base_url}/devices/{device_id}/status", headers=header)
         response.raise_for_status()
         full_details = response.json()
