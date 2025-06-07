@@ -1,9 +1,9 @@
 {
   "domain": "cooktop",
-  "name": "Smart Cooktop",
-  "version": "1.0.0",
-  "documentation": "https://your-docs-url",
+  "name": "Smart Things Cooktop",
+  "version": "0.1.0",
+  "documentation": "https://github.com/dimadl/homeassistant-samsung-smart-cooktop",
   "requirements": ["requests"],
-  "codeowners": ["@your-github-username"],
+  "codeowners": ["@dimadl"],
   "config_flow": true
 }

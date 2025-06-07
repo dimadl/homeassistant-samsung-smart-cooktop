@@ -1,22 +1,24 @@
 {
+  "title": "Smart Things Cooktop",
   "config": {
-    "step": {
-      "user": {
-        "description": "New NEW_NAME Sensor",
-        "data": {
-          "entity_id": "Input sensor",
-          "name": "Name"
-        }
+      "step": {
+          "creds": {
+              "title": "Smart Things OAuth Credentials",
+              "description": "Provide the credentials of the registered app in Smart Things",
+              "data": {
+                  "client_id": "Client ID",
+                  "client_secret": "Client Secret",
+                  "redirect_url": "Redirect URL",
+                  "code": "Authorization Code"
+              }
+          },
+          "select_cooktop": {
+              "title": "Cooktop",
+              "description": "Select a desired cooktop from the list",
+              "data": {
+                  "device_id": "Cooktop Device"
+              }
+          }
       }
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "data": {
-          "entity_id": "[%key:component::NEW_DOMAIN::config::step::user::description%]"
-        }
-      }
-    }
   }
 }

@@ -5,9 +5,9 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, SMART_THINGS_API_BASE, CLIENT_ID, CLIENT_SECRET, CODE, SMART_THINGS_TOKEN_URL, REDIRECT_URL, SCOPES
+from .const import DOMAIN, SMART_THINGS_API_BASE
 from .smart_things_api import CooktopAPI
-from .oauth_smart_thing import OauthSessionSmartThings
+from .oauth_smart_thing import OauthSessionContext
 from .coordinator import CooktopDataUpdateCoordinator
 
 
@@ -17,9 +17,9 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     #TBD: Load the auth details from the config entry
-    oauth_session = OauthSessionSmartThings(SMART_THINGS_TOKEN_URL, CLIENT_ID, CLIENT_SECRET,REDIRECT_URL, SCOPES, CODE)
-    api = CooktopAPI(SMART_THINGS_API_BASE, oauth_session)
-    
+    oauth_context = OauthSessionContext()
+    api = CooktopAPI(oauth_context.get_session())
+
     device_id = entry.data["device_id"]
     coordinator = CooktopDataUpdateCoordinator(hass, api, device_id,
                                                 ["burner-01", "burner-02", "burner-03", "burner-04"])

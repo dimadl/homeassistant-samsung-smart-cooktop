@@ -3,11 +3,7 @@
 DOMAIN = "cooktop"
 SMART_THINGS_API_BASE = "https://api.smartthings.com/v1"
 SMART_THINGS_TOKEN_URL = "https://api.smartthings.com/oauth/token"
-CLIENT_SECRET = ""
-CLIENT_ID = ""
-REDIRECT_URL = ""
 SCOPES="r:devices:*+w:devices:*+x:devices:*"
-CODE = ''
 
 BURNERS = {
   "burner-01": {

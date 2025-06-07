@@ -1,22 +1,22 @@
 import requests, base64, datetime, logging, time
+from .const import SMART_THINGS_TOKEN_URL, SCOPES
 
 _LOGGER = logging.getLogger(__name__)
 
-class OauthSessionSmartThings:
-  def __init__(self, token_url, client_id, client_secret, redirect_url, scopes, code):
+class OauthSessionSmartThings():
+  def __init__(self, client_id, client_secret, redirect_url, code):
     '''[TBD] Move to a DTO'''
-    self.token_url = token_url
+    self.token_url = SMART_THINGS_TOKEN_URL
     self.client_secret = client_secret
     self.client_id= client_id
     self.redirect_url = redirect_url
-    self.scopes = scopes
-    self.code = code
+    self.scopes = SCOPES
+    self.code=code
 
     '''Internal state'''
     self.refresh_token = None
     self.token_cache = AccessTokenCache()
     self.initialized = False
-
 
   def init_session(self):
     headers = {
@@ -90,3 +90,23 @@ class AccessTokenCache:
     _LOGGER.debug("Cache miss")
     self._access_token = None
 
+
+class OauthSessionContextMeta(type):
+     _instances = {}
+
+     def __call__(cls, *args, **kwargs):
+    
+        if cls not in cls._instances:
+          instance = super().__call__(*args, **kwargs)
+          cls._instances[cls] = instance
+        return cls._instances[cls]
+
+class OauthSessionContext(metaclass=OauthSessionContextMeta):
+  def __init__(self):
+    self._session: OauthSessionSmartThings = None
+  
+  def create_session(self, client_id, client_secret, redirect_url, code):
+    self._session = OauthSessionSmartThings(client_id, client_secret, redirect_url, code)
+
+  def get_session(self) -> OauthSessionSmartThings:
+    return self._session

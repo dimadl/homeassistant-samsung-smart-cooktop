@@ -1,11 +1,26 @@
 import requests, logging
+from .const import SMART_THINGS_API_BASE
 
 _LOGGER = logging.getLogger(__name__)
 
 class CooktopAPI:
-    def __init__(self, base_url, oauth_session):
-        self.base_url = base_url
+    def __init__(self, oauth_session):
+        self.base_url = SMART_THINGS_API_BASE
         self.oauth_session = oauth_session
+
+    def get_cooktops(self):
+        header = {'Authorization': 'Bearer {}'.format(self.oauth_session.get_token())}
+        response = requests.get(f"{self.base_url}/devices", headers=header)
+
+        cooktops = []
+        if response.status_code == 200:
+            cooktops = [{"device_id": cooktop["deviceId"], "name": f"({cooktop["deviceTypeName"]} {cooktop["name"]})"} for cooktop in filter(lambda device: "deviceTypeId" in device and device["deviceTypeId"] == "Cooktop", response.json()["items"])]
+            
+        else: 
+            _LOGGER.error("Couldn't load device")
+
+        return cooktops
+
 
     def get_cooktop_burners_status(self, device_id, burner_ids):
         _LOGGER.info(f"GET {self.base_url}/devices/{device_id}/status")
