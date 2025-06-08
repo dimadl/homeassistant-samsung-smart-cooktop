@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  COMPONENT_NAME: samsung-smart-cooktop
+  COMPONENT_NAME: smartthings-cooktop
 
 jobs:
   release:
