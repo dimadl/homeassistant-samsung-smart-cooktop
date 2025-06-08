@@ -1,3 +1,6 @@
+[![HACS Default][hacs_shield]][hacs]
+[![GitHub Latest Release][releases_shield]][latest_release]
+
 # SmartThings Cooktop
 
 >[!CAUTION]
