@@ -1,9 +1,11 @@
 {
-  "domain": "cooktop",
+  "domain": "smartthings-cooktop",
   "name": "Smart Things Cooktop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "documentation": "https://github.com/dimadl/homeassistant-samsung-smart-cooktop",
   "requirements": ["requests"],
   "codeowners": ["@dimadl"],
+  "issue_tracker": "https://github.com/dimadl/homeassistant-samsung-smart-cooktop/issues",
+  "iot_class": "cloud_polling",
   "config_flow": true
 }

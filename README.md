@@ -15,8 +15,8 @@ The idea came from a need to integrate a Samsung cooktop with a hood (not a Sams
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dimadl&repository=homeassistant-samsung-smart-cooktop&category=integration)
 
 ### Manual installation
-1. Download the latest release of `homeassistant-samsung-smart-cooktop` repository. The link - [*samsung-smart-cooktop.zip*](https://github.com/dimadl/homeassistant-samsung-smart-cooktop/releases/latest/download/samsung-smart-cooktop.zip.zip)
-2. Copy the `custom_components/samsung-smart-cooktop` folder from the downloaded files and paste the it into your Home Assistant's custom components directory: `<home_assistant_folder>/custom_components/samsung-smart-cooktop`
+1. Download the latest release of `homeassistant-samsung-smart-cooktop` repository. The link - [*smartthings-cooktop.zip*](https://github.com/dimadl/homeassistant-samsung-smart-cooktop/releases/latest/download/smartthings-cooktop.zip)
+2. Copy the `custom_components/smartthings-cooktop` folder from the downloaded files and paste the it into your Home Assistant's custom components directory: `<home_assistant_folder>/custom_components/smartthings-cooktop`
 5. Restart Home Assistant.
 
 ## Configuration
@@ -29,7 +29,7 @@ When the integration is installed using one of the above approach, it should be 
 
 You can also use the following [My Home Assistant](http://my.home-assistant.io/) link:
 
-[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=cooktop)
+[![Open your Home Assistant instance and start setting up a new integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=smartthings-cooktop)
 
 #### Config Flow Fields
 
