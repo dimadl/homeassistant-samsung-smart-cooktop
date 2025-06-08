@@ -1,6 +1,6 @@
 """Constants for the samsung_cooktop integration."""
 
-DOMAIN = "cooktop"
+DOMAIN = "smartthings-cooktop"
 SMART_THINGS_API_BASE = "https://api.smartthings.com/v1"
 SMART_THINGS_TOKEN_URL = "https://api.smartthings.com/oauth/token"
 SCOPES="r:devices:*+w:devices:*+x:devices:*"
