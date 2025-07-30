@@ -5,7 +5,7 @@ from __future__ import annotations
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN, SMART_THINGS_API_BASE
+from .const import DOMAIN
 from .smart_things_api import CooktopAPI
 from .oauth_smart_thing import OauthSessionContext
 from .coordinator import CooktopDataUpdateCoordinator
@@ -16,7 +16,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    #TBD: Load the auth details from the config entry
     oauth_context = OauthSessionContext()
     api = CooktopAPI(oauth_context.get_session())
 
