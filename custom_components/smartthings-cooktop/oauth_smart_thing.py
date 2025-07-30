@@ -4,7 +4,7 @@ from .const import SMART_THINGS_TOKEN_URL, SCOPES
 _LOGGER = logging.getLogger(__name__)
 
 class OauthCodeFlowCredentials:
-  def __init__(self, client_secret, client_id, redirect_url, code):
+  def __init__(self, client_id, client_secret, redirect_url, code):
     self._client_secret = client_secret
     self._client_id= client_id
     self._redirect_url = redirect_url
@@ -40,6 +40,12 @@ class OauthSessionSmartThings():
     self._initialized = False
 
   def init_session(self):
+    _LOGGER.info(f"Init Oauth session")
+    _LOGGER.info(f"{self._code_flow_credentials.client_id}")
+    _LOGGER.info(f"{self._code_flow_credentials.client_secret}")
+    _LOGGER.info(f"{self._code_flow_credentials.redirect_url}")
+    _LOGGER.info(f"{self._code_flow_credentials.code}")
+
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Authorization': f'Basic {base64.b64encode(f"{self._code_flow_credentials.client_id}:{self._code_flow_credentials.client_secret}".encode()).decode("utf-8")}',
