@@ -4,8 +4,8 @@ import logging
 from homeassistant import config_entries
 from homeassistant.helpers.selector import selector
 from .const import DOMAIN
-from .oauth_smart_thing import OauthSessionContext
-from .smart_things_api import CooktopAPI
+from .oauth_smart_thing import OauthSessionContext, OauthCodeFlowCredentials
+from .smart_things_api import CooktopAPI, Cooktop
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._client_id = None
         self._client_secret = None
         self._redirect_url = None
-        self._cooktops = []
+        self._cooktops = list[Cooktop]
 
     async def async_step_user(self, user_input=None):
         """Init config flow when a use is interacting"""
@@ -41,11 +41,17 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             code = user_input["code"]
 
             try:
+                _LOGGER.info("Creating OAuth session")
+                
                 oauth_context = OauthSessionContext()
-                oauth_context.create_session(self._client_id, self._client_secret, self._redirect_url, code)
+                code_flow_credentials = OauthCodeFlowCredentials(self._client_id, self._client_secret, self._redirect_url, code)
+                oauth_context.create_session(code_flow_credentials)
+
+                _LOGGER.info("OAuth session has been created. Proceeding to the retriaval of cooktops")
+
                 cooktop_api = CooktopAPI(oauth_context.get_session())
 
-                cooktops = await self.hass.async_add_executor_job(
+                cooktops: list[Cooktop] = await self.hass.async_add_executor_job(
                             cooktop_api.get_cooktops)
                 if len(cooktops) > 0:
                     _LOGGER.info(f"Loaded cooktops {cooktops}")
@@ -86,7 +92,7 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def get_schema_select_cooktop(self, user_input=None):
         """The schema for the selection of a cooktop from the list availble in the Smart Things account"""
 
-        cooktop_options = [{"label": c["name"], "value": c["device_id"]} for c in self._cooktops]
+        cooktop_options = [{"label": c.name, "value": c.device_id} for c in self._cooktops]
         return vol.Schema({
             vol.Required("device_id"): selector(
                 {"select": {"options": cooktop_options}}),
