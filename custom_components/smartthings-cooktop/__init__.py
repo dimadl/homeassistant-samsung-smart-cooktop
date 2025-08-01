@@ -1,10 +1,12 @@
 """The samsung_cooktop integration."""
+
 from __future__ import annotations
 
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.storage import Store
 
 from .const import DOMAIN
 from .smart_things_api import CooktopAPI
@@ -13,7 +15,7 @@ from .coordinator import CooktopDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-def cooktop_api_init() -> CooktopAPI:
+async def cooktop_api_init(hass) -> CooktopAPI:
     oauth_context = OauthSessionContext()
     cooktop_api = CooktopAPI(oauth_context.get_session())
     return cooktop_api

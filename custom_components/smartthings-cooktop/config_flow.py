@@ -1,10 +1,12 @@
 import voluptuous as vol
 import logging
+import asyncio
 
 from homeassistant import config_entries
 from homeassistant.helpers.selector import selector
+from homeassistant.helpers.storage import Store
 from .const import DOMAIN
-from .oauth_smart_thing import OauthSessionContext, OauthCodeFlowCredentials
+from .oauth_smart_thing import OauthSessionContext, OauthCodeFlowCredentials, OauthSessionSmartThings
 from .smart_things_api import CooktopAPI, Cooktop
 
 _LOGGER = logging.getLogger(__name__)
@@ -35,24 +37,32 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         errors = {}
         if user_input is not None:
-            self._client_id = user_input["client_id"]
-            self._client_secret = user_input["client_secret"]
-            self._redirect_url = user_input["redirect_url"]
+            self._client_id = "e6a4d874-f230-4730-82be-280f4d4375ef"
+            self._client_secret = "5647211c-30d1-4178-829f-17b2aff4e189"
+            self._redirect_url = "https://httpbin.org/get"
             code = user_input["code"]
 
             try:
                 _LOGGER.info("Creating OAuth session")
-                
-                oauth_context = OauthSessionContext()
+
                 code_flow_credentials = OauthCodeFlowCredentials(self._client_id, self._client_secret, self._redirect_url, code)
-                oauth_context.create_session(code_flow_credentials)
+                oauth_context = OauthSessionContext()
+                oauth_context.create_session(self.hass, code_flow_credentials)
 
                 _LOGGER.info("OAuth session has been created. Proceeding to the retriaval of cooktops")
 
                 cooktop_api = CooktopAPI(oauth_context.get_session())
 
-                cooktops: list[Cooktop] = await self.hass.async_add_executor_job(
-                            cooktop_api.get_cooktops)
+                # cooktops: list[Cooktop] = await self.hass.async_add_executor_job(
+                #             cooktop_api.async_get_cooktops)
+
+                cooktops: list[Cooktop] = await cooktop_api.async_get_cooktops()
+
+                # loop = asyncio.get_event_loop()
+                # cooktops: list[Cooktop] = asyncio.run_coroutine_threadsafe(
+                #             cooktop_api.async_get_cooktops(), loop
+                # ).result()
+
                 if len(cooktops) > 0:
                     _LOGGER.info(f"Loaded cooktops {cooktops}")
                     self._cooktops = cooktops

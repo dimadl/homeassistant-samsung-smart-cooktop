@@ -23,4 +23,4 @@ class CooktopDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         _LOGGER.info("Running the job to retrieve the cooktop details")
-        return await self.hass.async_add_executor_job(self._cooktop_api.get_cooktop_burners_status, self._device_id, self._burner_ids)
+        return await self._cooktop_api.async_get_cooktop_burners_status(self._device_id, self._burner_ids)
