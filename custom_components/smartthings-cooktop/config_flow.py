@@ -37,9 +37,9 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         errors = {}
         if user_input is not None:
-            self._client_id = "e6a4d874-f230-4730-82be-280f4d4375ef"
-            self._client_secret = "5647211c-30d1-4178-829f-17b2aff4e189"
-            self._redirect_url = "https://httpbin.org/get"
+            self._client_id = user_input["client_id"]
+            self._client_secret = user_input["client_secret"]
+            self._redirect_url = user_input["redirect_url"]
             code = user_input["code"]
 
             try:
@@ -52,16 +52,7 @@ class CooktopConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.info("OAuth session has been created. Proceeding to the retriaval of cooktops")
 
                 cooktop_api = CooktopAPI(oauth_context.get_session())
-
-                # cooktops: list[Cooktop] = await self.hass.async_add_executor_job(
-                #             cooktop_api.async_get_cooktops)
-
                 cooktops: list[Cooktop] = await cooktop_api.async_get_cooktops()
-
-                # loop = asyncio.get_event_loop()
-                # cooktops: list[Cooktop] = asyncio.run_coroutine_threadsafe(
-                #             cooktop_api.async_get_cooktops(), loop
-                # ).result()
 
                 if len(cooktops) > 0:
                     _LOGGER.info(f"Loaded cooktops {cooktops}")

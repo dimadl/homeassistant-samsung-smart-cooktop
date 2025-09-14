@@ -15,8 +15,9 @@ from .coordinator import CooktopDataUpdateCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-async def cooktop_api_init(hass) -> CooktopAPI:
+def cooktop_api_init(hass) -> CooktopAPI:
     oauth_context = OauthSessionContext()
+    oauth_context.create_session(hass, None)
     cooktop_api = CooktopAPI(oauth_context.get_session())
     return cooktop_api
 
@@ -26,7 +27,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     _LOGGER.info("Setup entry flow. Very begnning")
     
-    cooktop_api = cooktop_api_init()
+    cooktop_api = cooktop_api_init(hass)
     device_id = entry.data["device_id"]
 
     _LOGGER.info(f"The device with id {device_id} will be mointored by the integration. Setting up the rest")
